@@ -3,12 +3,15 @@ import input_data
 mnist = input_data.read_data_sets("/tmp/data/", one_hot=True)
 
 import tensorflow as tf
+import os
 
 # Set parameters
 learning_rate = 0.01
 training_iteration = 30
 batch_size = 100
 display_step = 2
+
+WORK_DIR = os.getcwd()
 
 # TF graph input
 x = tf.placeholder("float", [None, 784]) # mnist data image of shape 28*28=784
@@ -46,14 +49,15 @@ init = tf.initialize_all_variables()
 # Merge all summaries into a single operator
 merged_summary_op = tf.merge_all_summaries()
 
+
 # Launch the graph
 with tf.Session() as sess:
     sess.run(init)
 
-    
+    print("work dir is ", WORK_DIR)
     
     # Change this to a location on your computer
-    summary_writer = tf.train.SummaryWriter('/LOCATION/ON/YOUR/COMPUTER/', graph_def=sess.graph_def)
+    summary_writer = tf.train.SummaryWriter(WORK_DIR, graph_def=sess.graph_def)
 
     # Training cycle
     for iteration in range(training_iteration):
@@ -71,12 +75,12 @@ with tf.Session() as sess:
             summary_writer.add_summary(summary_str, iteration*total_batch + i)
         # Display logs per iteration step
         if iteration % display_step == 0:
-            print "Iteration:", '%04d' % (iteration + 1), "cost=", "{:.9f}".format(avg_cost)
+            print("Iteration:", '%04d' % (iteration + 1), "cost=", "{:.9f}".format(avg_cost))
 
-    print "Tuning completed!"
+    print("Tuning completed!")
 
     # Test the model
     predictions = tf.equal(tf.argmax(model, 1), tf.argmax(y, 1))
     # Calculate accuracy
     accuracy = tf.reduce_mean(tf.cast(predictions, "float"))
-    print "Accuracy:", accuracy.eval({x: mnist.test.images, y: mnist.test.labels})
+    print("Accuracy:", accuracy.eval({x: mnist.test.images, y: mnist.test.labels}))
