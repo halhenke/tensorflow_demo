@@ -5,6 +5,9 @@ mnist = input_data.read_data_sets("/tmp/data/", one_hot=True)
 import tensorflow as tf
 import os
 
+# Up the verbosity
+tf.logging.set_verbosity(tf.logging.INFO)
+
 # Set parameters
 learning_rate = 0.01
 training_iteration = 30
